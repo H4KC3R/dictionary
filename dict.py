@@ -1,38 +1,70 @@
-def create_custom_dictionary(txt_file_path, output_dict_file):
-    # Создаем пустой словарь для хранения переводов
-    custom_dictionary = {}
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import wordnet
+import enchant
 
-    # Читаем текст из файла
-    with open(txt_file_path, 'r', encoding='utf-8') as txt_file:
-        text = txt_file.read()
+import re
 
-    # Разбиваем текст на отдельные слова
-    words = text.split()
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 
-    # Извлекаем уникальные слова
-    unique_words = set(words)
 
-    # Определяем переводы для каждого слова
-    for word in unique_words:
-        translation = input(f"Введите перевод для слова '{word}': ")
-        custom_dictionary[word] = translation
-        if translation == "AAA":
-            break
+def get_wordnet_pos(treebank_tag):
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return None
 
-    # Сохраняем словарь в файл
-    with open(output_dict_file, 'w', encoding='utf-8') as dict_file:
-        for word, translation in custom_dictionary.items():
-            dict_file.write(f"{word}: {translation}\n")
 
-    print("Кастомный словарь успешно создан и сохранен.")
+def lemmatize_word(word, pos):
+    if pos is None:
+        return word
+    else:
+        lemma = nltk.WordNetLemmatizer().lemmatize(word, pos=pos)
+        return lemma
+
+
+def extract_unique_words(text):
+    tokens = word_tokenize(text)
+    tagged_words = nltk.pos_tag(tokens)
+    unique_words = set()
+
+    for word, tag in tagged_words:
+        pos = get_wordnet_pos(tag)
+        lemma = lemmatize_word(word.lower(), pos)
+        unique_words.add(lemma)
+
+    return unique_words
+
+
+def filter_english_words(words):
+    d = enchant.Dict("en_US")
+    english_words = set()
+    for word in words:
+        # Проверяем, является ли слово английским и находится ли оно в словаре
+        if re.match(r'^[a-zA-Z\-]+$', word) and d.check(word):
+            english_words.add(word)
+    return english_words
 
 
 if __name__ == "__main__":
-    # Путь к файлу с текстом
-    txt_file_path = "text.txt"
+    with open('articles.txt', 'r', encoding='utf-8') as file:
+        text = file.read()
 
-    # Путь для сохранения кастомного словаря
-    output_dict_file = "custom_dictionary.txt"
+    unique_words = extract_unique_words(text)
+    filtered_wors =  filter_english_words(unique_words)
 
-    # Создаем кастомный словарь
-    create_custom_dictionary(txt_file_path, output_dict_file)
+    with open('words.txt', 'w') as file:
+        for word in filtered_wors:
+            file.write(word + '\n')
+
+    print("Уникальные слова:")
+    print(len(filtered_wors))
+    print(filtered_wors)
