@@ -1,16 +1,31 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import PyPDF2
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def pdf_to_text(pdf_file_path, output_txt_file):
+    # Открываем PDF файл
+    with open(pdf_file_path, 'rb') as pdf_file:
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+
+        # Создаем объект для записи текста в файл
+        with open(output_txt_file, 'w', encoding='utf-8') as txt_file:
+            # Проходим по всем страницам PDF
+            for page_num in range(len(pdf_reader.pages)):
+                # Получаем текст со страницы
+                page = pdf_reader.pages[page_num]
+                text = page.extract_text()
+
+                # Записываем текст в файл
+                txt_file.write(text)
+
+    print("PDF успешно сконвертирован в TXT.")
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+if __name__ == "__main__":
+    # Путь к PDF файлу
+    pdf_file_path = "/home/ilya/PycharmProjects/dict/articles/статьи на зачет/Фукин_Analysis of the Impact of Atmospheric Models on the Orbit Prediction of Space Debris.pdf"
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Имя файла для сохранения текста
+    output_txt_file = "output/output.txt"
+
+    # Вызываем функцию для конвертации
+    pdf_to_text(pdf_file_path, output_txt_file)
