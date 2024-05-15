@@ -18,25 +18,43 @@ def get_translation(word):
     container = body.find('div', class_='container')
     mclass_elements = container.find_all(class_='mclass160_10')[2]
     first_table = mclass_elements.find('table')
-    rows = first_table.find_all('tr')
+    rows = first_table.find_all('tr', recursive=False)
+
+    # print(first_table)
 
     flag = 0
 
     all_trans = []
 
-    for row in rows:
+    a = 0
+
+    for i, row in enumerate(rows):
+
+        # if i < 3:
+        #     continue
+
+        if row.text.strip() == "English thesaurus":
+            break
+
+        if row.has_attr('height'):
+            a = 2
 
         # Находим все элементы <td> в текущей строке
         cells = row.find_all('td')
         # Если в строке есть два элемента <td>, то это наши данные subj и trans
         # if len(cells) == 2:
-        # print(len(cells))
-        subj = cells[0].text.strip()
-        if word in subj:
+        #     print(len(cells))
+        # if not cells:
+        #     continue
+
+        # l = len(cells)
+
+        if a > 0:
             flag = 1
+            a -= 1
             # print("aaaaaaaa")
         else:
-            if len(cells) > 1 and flag > 0:
+            if len(cells) == 2 and flag > 0:
                 trans = cells[1].text.strip()
                 trans = trans.split(';')
                 trans = [re.sub(r'\s*\([^)]*\)', '', el) for el in trans]
@@ -50,8 +68,11 @@ def get_translation(word):
                 # print("---------------------")
                 flag -= 1
 
+
     all_trans = [el for sub in all_trans for el in sub]
 
+    if 'stresses' in all_trans:
+        all_trans.remove('stresses')
     return all_trans
     # print(all_trans)
 
@@ -59,7 +80,7 @@ def get_translation(word):
 if __name__ == "__main__":
     # Открываем файл для чтения
     all_res = []
-    with open("your_file.txt", "r") as file:
+    with open("words_thinned_wo_lines.txt", "r") as file:
         # Читаем все содержимое файла
         words = file.read().split()
 
