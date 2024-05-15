@@ -2,6 +2,7 @@ import re
 
 from bs4 import BeautifulSoup
 import requests
+from tqdm import tqdm
 
 
 def get_translation(word):
@@ -85,10 +86,10 @@ if __name__ == "__main__":
         words = file.read().split()
 
         # Перебираем слова и вызываем для каждого get_translation
-        for word in words:
+        for word in tqdm(words):
             result = get_translation(word)
             all_res.append([word, result])
-            print(result)
+            # print(result)
 
     with open('dictionary.txt', 'w') as file:
         for res in all_res:
