@@ -12,6 +12,6 @@ def remove_extra_newlines_and_sort(input_file_path, output_file_path):
 
 
 if __name__ == "__main__":
-    input_file_path = 'words_thinned.txt'
-    output_file_path = 'words_thinned_wo_lines.txt'
+    input_file_path = 'words.txt'
+    output_file_path = 'words_radmir_thinned.txt'
     remove_extra_newlines_and_sort(input_file_path, output_file_path)

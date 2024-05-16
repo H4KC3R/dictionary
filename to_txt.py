@@ -44,15 +44,15 @@ def process_articles(input_dir):
 
 if __name__ == "__main__":
     # Путь к директории с PDF файлами
-    input_dir = "articles"
+    input_dir = "articles_radmir"
 
     # Обрабатываем все статьи
     combined_text = process_articles(input_dir)
 
     # Путь для сохранения объединенного текста
-    output_txt_file = "output/articles.txt"
+    output_txt_file = "articles_radmir.txt"
 
-    os.makedirs("output")
+    # os.makedirs("output")
 
     # Сохраняем объединенный текст в файл
     with open(output_txt_file, 'w', encoding='utf-8') as txt_file:

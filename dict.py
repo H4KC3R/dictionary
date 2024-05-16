@@ -55,13 +55,13 @@ def filter_english_words(words):
 
 
 if __name__ == "__main__":
-    with open('articles.txt', 'r', encoding='utf-8') as file:
+    with open('articles_radmir.txt', 'r', encoding='utf-8') as file:
         text = file.read()
 
     unique_words = extract_unique_words(text)
     filtered_wors =  filter_english_words(unique_words)
 
-    with open('words.txt', 'w') as file:
+    with open('words_radmir.txt', 'w') as file:
         for word in filtered_wors:
             file.write(word + '\n')
 

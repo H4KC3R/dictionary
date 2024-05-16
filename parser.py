@@ -81,7 +81,7 @@ def get_translation(word):
 if __name__ == "__main__":
     # Открываем файл для чтения
     all_res = []
-    with open("words_thinned_wo_lines.txt", "r") as file:
+    with open("words_radmir_thinned.txt", "r") as file:
         # Читаем все содержимое файла
         words = file.read().split()
 
@@ -91,7 +91,7 @@ if __name__ == "__main__":
             all_res.append([word, result])
             # print(result)
 
-    with open('dictionary.txt', 'w') as file:
+    with open('dictionary_radmir.txt', 'w') as file:
         for res in all_res:
             file.write(res[0] + ": " + ', '.join(res[1]) + '.\n')
 
